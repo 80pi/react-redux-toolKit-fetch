@@ -3,10 +3,11 @@ import {
   useUpdatePostMutation,
   useAddProductMutation,
   useUpdateProductMutation,
+  useDeleteProductMutation,
 } from "../slice/userSlice";
 import { MultipleUsers, SingleUserByInput } from "./AllUsers";
 import { PostAComment, UpdateComment } from "./CommentsSection";
-import { AddProducts, UpdateProducts } from "./ProductsSection";
+import { AddProducts, DeleteProducts, UpdateProducts } from "./ProductsSection";
 
 const Users = () => {
   const [addPost, { data, isLoading }] = useAddPostMutation();
@@ -19,11 +20,16 @@ const Users = () => {
     updateProduct,
     { data: updatedProductData, isSuccess: productUpdatedStatus },
   ] = useUpdateProductMutation();
+  const [
+    deleteProduct,
+    { data: deletedProductData, isSuccess: productDeletionStatus },
+  ] = useDeleteProductMutation();
 
   console.log("add post", data, isLoading);
   console.log("update post", updateData, updatedLoading);
   console.log("data", addedProductData, productAddStatus);
   console.log("data", updatedProductData, productUpdatedStatus);
+  console.log("data", deletedProductData, productDeletionStatus);
 
   const handlePost = async () => {
     try {
@@ -71,6 +77,13 @@ const Users = () => {
       console.log("error while post", error);
     }
   };
+  const handleDeleteProduct = async () => {
+    try {
+      await deleteProduct({ id: 1 });
+    } catch (error: any) {
+      console.log("error while deleting a product", error);
+    }
+  };
   return (
     <>
       <SingleUserByInput />
@@ -92,6 +105,11 @@ const Users = () => {
       <UpdateProducts
         handleUpdateProduct={handleUpdateProduct}
         updatedProductData={updatedProductData}
+      />
+      <br />
+      <DeleteProducts
+        handleDeleteProduct={handleDeleteProduct}
+        deletedProductData={deletedProductData}
       />
     </>
   );
